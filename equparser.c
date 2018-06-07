@@ -1,6 +1,5 @@
 #include<stdlib.h>
 #include<stdio.h>
-#include<string.h>
 #include<malloc.h>
 #include "stack.h"
 
@@ -63,7 +62,7 @@ token* build_token(token_t type, double value)
 
 int is_numeric(char c)
 {
-	if(c == '.' || /* period & exponents */
+	if(c == '.' || /* period  */
 		( c >= 48 && c <= 57 )) /* 0 - 9 */
 		return 1;
 	if(c == 'e' || c == 'E') /* exponents */

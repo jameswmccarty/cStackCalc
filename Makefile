@@ -11,4 +11,4 @@ stack: stack.c stack.h
 	$(CC) $(CFLAGS) stack.c -c -o stack.lib $(LFLAGS)
 
 clean:
-	\rm parser
+	\rm parser stack.lib
