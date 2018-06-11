@@ -196,8 +196,16 @@ double postfix_eval() {
 		if(P[p_idx] != NULL && P[p_idx]->type > OP_LO && P[p_idx]->type < OP_HI) { /* got operator */
 			op = P[p_idx++]->type;
 			throw = pop(&tmpstack);
+			if(throw == NULL || throw->type != OPERAND) {
+				printf("Error: Malformed input.  Expected number, got something else.\n");
+				exit(EXIT_FAILURE);			
+			}
 			r = throw->val; free(throw);
 			throw = pop(&tmpstack);
+			if(throw == NULL || throw->type != OPERAND) {
+				printf("Error: Malformed input.  Expected number, got something else.\n");
+				exit(EXIT_FAILURE);			
+			}
 			l = throw->val; free(throw);			
 			switch(op) {
 				case PLUS:
