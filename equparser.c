@@ -5,7 +5,7 @@
 
 #define SPACE ' '
 #define TAB '\t'
-#define MAXELEM 100
+#define MAXELEM 0x100
 
 /* enums and structs */
 
@@ -146,6 +146,11 @@ void make_postfix()
 			push(&tmpstack, current);
 		else if(current->type == RPAREN) /* un-nest */
 		{
+			/* Found a right parenthesis with empty stack */
+			if(peek(&tmpstack) == NULL) {
+				printf("Error: Unmatched Right parenthesis.\n");
+				exit(EXIT_FAILURE);	
+			}
 			while(peek(&tmpstack) != NULL && peek(&tmpstack)->type != LPAREN)
 				P[p_idx++] = pop(&tmpstack);
 			(void) pop(&tmpstack);
@@ -163,15 +168,22 @@ void make_postfix()
 		t_idx++;
 	}
 
-	while(peek(&tmpstack) != NULL)
+	while(peek(&tmpstack) != NULL) {
 		P[p_idx++] = pop(&tmpstack);
+		/* Left paren on stack by itself */
+		if(P[p_idx-1]->type == LPAREN && 
+			peek(&tmpstack) == NULL) {
+			printf("Error: Unmatched Left parenthesis.\n");
+			exit(EXIT_FAILURE);		
+		}
+	}
 	clear(&tmpstack);
 }
 
 double postfix_eval() {
 	stack tmpstack;
 	int p_idx = 0;
-	double temp;
+	double temp = 0.;
 	double l, r;
 	token_t op;
 	token *throw;
@@ -214,7 +226,10 @@ double postfix_eval() {
 	}
 
 	throw = pop(&tmpstack);
-	temp = throw->val; free(throw);
+	if(throw != NULL)
+		temp = throw->val;
+	free(throw);
+
 	while(peek(&tmpstack) != NULL)
 		free(pop(&tmpstack));
 	clear(&tmpstack);
